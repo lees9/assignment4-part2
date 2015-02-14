@@ -1,0 +1,25 @@
+<?php
+	include_once 'inventory.php';
+	connect();
+?>
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+		<php table(); ?>
+
+		<select name="dropdown">
+			<?php dropmenu(); ?>
+		</select>
+			<?php closesql(); ?>
+		<form action="inventory.php" method="POST">
+			Name: <input type="text" name="title"><br><br>
+			Category: <input type="text" name="category"><br><br>
+			Length: <input type="number" name="length"><br><br>
+			<input type="submit" name="submit" value="Add Movie">
+		</form><br><br>
+
+
+
+</body>
+</html>
