@@ -1,0 +1,21 @@
+Start: Sun, 14 Feb 2015 17:00:00 -0800
+End: Sun, 15 Feb 2015 20:22:51 -0800
+Tasks: Marathon session, completed! had to make 3 pages to separate out everything to keep track.
+	Actually 2 long sessions. From 7pm on Sat to around 2am. From 10am Sun to around 8pm. So 
+	total of 17 hours both sessions combined. Around 15 minute breaks every 2-3 hours.
+
+Start: Sat, 14 Feb 2015 14:04:48 -0800
+End: Sat, 14 Feb 2015 15:04:48 -0800
+Tasks: trying to figure out how to add movies into the tables
+
+Start: Sat, 14 Feb 2015 02:31:56 -0800
+End: Sat, 14 Feb 2015 03:31:56 -0800
+Tasks: finished implementing table and filtering of the table
+
+Start: Sat, 14 Feb 2015 01:00:16 -0800
+End: Sat, 14 Feb 2015 01:51:16 -0800
+Tasks: trying changes for dropdown
+
+Start: Fri, 13 Feb 2015 20:42:39 -0800
+End: Fri, 13 Feb 2015 21:42:39 -0800
+Tasks: set up database, added table and forms
