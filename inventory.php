@@ -1,99 +1,62 @@
-<!DOCTYPE html>
-<html>
-<head>
+<!--  Name: Sang Hoon Lee
+    Class: CS290 W15
+    Assignment: 4 part 2
+    Filename: inventory.php
+    Description: Contains the functions and method to filter by category,
+    			 add movies, and remove movies.
+    Date: 02/15/15
+-->
 <?php
-    
-    //connect to the database
-    $mysqli = mysqli_connect("oniddb.cws.oregonstate.edu", "lees9-db", "JCwfOBRQArmk8Cqy", "lees9-db");
-    if (mysqli_connect_errno($mysqli)) {
-      echo "Failed to connect to MySQL: " . mysqli_connect_error();
-    } else{
-      echo "Connected to Video Inventory<br><br>";
-    }
+	include_once('sql.php');
 
-    //to make the dropdown select box
-    $dropres = $mysqli->query("SELECT DISTINCT category FROM Inventory");
-    echo "<form action='' method='POST' name='form_filter'>";
-    echo "<select name='value'>";
-    echo "<option value='all'>All Movies</option>";
-    while ($row = mysqli_fetch_array($dropres)) {
-        echo "<option value='" . $row['category'] . "'>" . $row['category'] . "</option>";
-    }
-    echo "</select>";
-    echo "<input type='submit' value='filter'>";
-    echo "</form>";
-    echo "<br><br>";
-
-    $query = $mysqli->query("SELECT * FROM Inventory");
-
-    //to filter the table with the dropdown select box
-    if (isset($_POST['value'])){
-      if ($_POST['value'] != "all"){
-          $categoryName = $_POST['value'];
-          $query = $mysqli->query("SELECT * FROM Inventory WHERE category='$categoryName'");
-      }
-    }
+	//function to filter by category name
+	function getFilter() {
+		if (isset($_POST['value'])){
+			if ($_POST['value'] != "all"){
+				$categoryName = $_POST['value'];
+				return $categoryName;
+			}
+		}
+		return 'all';
+	}
 
 
-    //to add to the table
-    if (isset($_POST['title']) && isset($_POST['category']) && isset($_POST['length'])){
-      $title = $_POST['title'];
-      $category = $_POST['category'];
-      $length = $_POST['length'];
-      echo $title;
-      echo $category;
-      echo $length;
-      $mov_add = $mysqli->query("INSERT INTO Inventory(name, category, length) VALUES ($title, $category, $length)");
-    }
+	//function to return post operation
+	function getOperation() {
+		if (isset($_POST['operation'])){
+			return $_POST['operation'];
+		}
+		return "index";
+	}
+
+	$sql = new Sql();
+	$categories = $sql->getCategories();	//get the distinct categories
 
 
+	//from post operations for adding movie, removing movie, check in and out
+	$op = getOperation();
+	if ($op === 'insert') {
+		$title = $_POST['title'];
+		$category = $_POST['category'];
+		$length = $_POST['length'];
+		$sql->newRecord($title, $category, $length);	
+	} else if ($op === 'remove') {
+		$id = $_POST['id'];
+		$sql->removeOne($id);	
+	} else if ($op === 'remove_all') {
+		$sql->removeAll();
+	} else if ($op === 'checkout' || $op === 'checkin') {
+		$id = $_POST['id'];	
+		$sql->checkInOrOut($op, $id);
+	}
 
-    function printTable($var){
-    //to print out the filtered box
-    echo '<table border=2">';
-    echo"<tr><td><strong>ID</strong></td><td><strong>Name</strong></td><td><strong>Category</strong></td><td><strong>Length</strong></td><td><strong>Rented</strong></td></tr>";
-    while ($row = mysqli_fetch_array($var)){
-      echo "<tr><td>"; 
-      echo $row['id'];
-      echo "</td><td>";   
-      echo $row['name'];
-      echo "</td><td>";    
-      echo $row['category'];
-      echo "</td><td>";
-      echo $row['length'];
-      echo "</td><td>";
-      if (is_null($row['rented'])){
-        echo "Available";
-      }
-      else{
-        echo "Checked out";
-      }
-      echo "</td><td>";
-      echo "<form action='' method='GET' name='addrem'><input type='submit' value='remove'></form>";
-      echo "</td></tr>";
-    }
-    echo "<tr><td><form action='' method='GET' name='deleteall'><input type='submit' value='Remove all'></form></td></tr>";
-    echo "</table><br><br>";
-  }
+	//get filter category
+	$filter = getFilter();
 
-  printTable($query);
+	//call function to get filtered records and set to $filteredRecords to be printed
+	$filteredRecords = $sql->getFilteredRecords($filter);
 
-
-
-
-    mysqli_close($mysqli);
+	include 'render.php';
 
 ?>
 
-</head>
-<body>
-
-
-    <form action="" method="POST" name='additions'>
-      Name: <input type="text" name="title"><br><br>
-      Category: <input type="text" name="category"><br><br>
-      Length: <input type="number" name="length"><br><br>
-      <input type="submit" name="submit">
-    </form><br><br>
-  </body>
-  </html>
